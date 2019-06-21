@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <title>Trains</title>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="jumbotron mb-4">
+            <h1 class="text-center">Train Schedule</h1>
+        </div>
+
+        <div class="row my-4">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">Add Train</div>
+
+                    <div class="card-body">
+
+                        <form role="form">
+
+                            <div class="form-group">
+                                <label for="search">Train Name:</label>
+                                <input type="text" class="form-control" id="train-name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="search">Destination:</label>
+                                <input type="text" class="form-control" id="destination">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="search">First Train Time (HH:mm - military time):</label>
+                                <input type="text" class="form-control" id="first-time">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="search">Frequency (min):</label>
+                                <input type="text" class="form-control" id="frequency">
+                            </div>
+
+                            <button type="submit" class="btn btn-default" id="submit">Submit</button>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-4">
+            <div class="col-sm-12">
+                <div class="card">
+
+                    <div class="card-header">Current Train Schedule</div>
+
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Train Name</th>
+                                    <th scope="col">Destination</th>
+                                    <th scope="col">Frequency (min)</th>
+                                    <th scope="col">Next Arrival</th>
+                                    <th scope="col">Minutes Away</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body"></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-database.js"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+    <!-- JavaScript -->
+    <script src="javascript/app.js"></script>
+
+    <!-- date-fns -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js" integrity="sha256-wCBClaCr6pJ7sGU5kfb3gQMOOcIZNzaWpWcj/lD9Vfk=" crossorigin="anonymous"></script>
+
+</body>
+</html>
