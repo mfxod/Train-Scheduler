@@ -18,6 +18,13 @@ let destination = "";
 let firstTime = "";
 let frequency = 0;
 
+const newTrain = {
+    trainName: trainName,
+    destination: destination,
+    firstTime: firstTime,
+    frequency: frequency
+}
+
 $("#submit").on("click", function (event) {
     event.preventDefault();
 
@@ -26,24 +33,22 @@ $("#submit").on("click", function (event) {
     firstTime = $("#first-time").val().trim();
     frequency = $("#frequency").val().trim();
 
-    database.ref().set({
-        trainName: trainName,
-        destination: destination,
-        firstTime: firstTime,
-        frequency: frequency
-    });
+    database.ref().push(newTrain);
 });
 
-database.ref().on("value", function (snapshot) {
-    const tableRow = $("<tr>");
-    const tdTrainName = $("<td>").text(snapshot.val().trainName);
-    const tdDestination = $("<td>").text(snapshot.val().destination);
-    const tdFirstTime = $("<td>").text(snapshot.val().firstTime);
-    const tdFrequency = $("<td>").text(snapshot.val().frequency);
+database.ref().on("child_added", function (childSnapshot) {
+
+    // trainName = childSnapshot.val().trainName;
+    // destination = childSnapshot.val().destination;
+    // firstTime = childSnapshot.val().firstTime;
+    // frequency = childSnapshot.val().frequency;
+
+    const tableRow = $("<tr>").append(
+        $("<td>").text(trainName),
+        $("<td>").text(destination),
+        $("<td>").text(firstTime),
+        $("<td>").text(frequency)
+    );
 
     $("#table-body").append(tableRow);
-    tableRow.append(tdTrainName);
-    tableRow.append(tdDestination);
-    tableRow.append(tdFirstTime);
-    tableRow.append(tdFrequency);
 });
