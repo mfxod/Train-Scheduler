@@ -1,12 +1,22 @@
 
+// if (firstTime already occurred) {
+//     x = currentTime - firstTime;
+//     remainder = x % frequency;
+//     minAway = frequency - remainder;
+//     nextArrival = currentTime + minAway;
+// } else {
+//     nextArrival = firstTime;
+//     minAway = firstTime - currentTime;
+// }
+
 const firebaseConfig = {
-    apiKey: "AIzaSyClx_AC_pqxs7pn6fLE_JTVse0ZDIFIMe0",
-    authDomain: "test-db-605ab.firebaseapp.com",
-    databaseURL: "https://test-db-605ab.firebaseio.com",
-    projectId: "test-db-605ab",
-    storageBucket: "test-db-605ab.appspot.com",
-    messagingSenderId: "728031710801",
-    appId: "1:728031710801:web:b1354a4ffcc1e41c"
+    apiKey: "AIzaSyA5kKlwHTUsEAqxWdaR2hsrxQ3HxgBQ8ao",
+    authDomain: "train-scheduler-5bb4d.firebaseapp.com",
+    databaseURL: "https://train-scheduler-5bb4d.firebaseio.com",
+    projectId: "train-scheduler-5bb4d",
+    storageBucket: "",
+    messagingSenderId: "164660802657",
+    appId: "1:164660802657:web:ff1c81d82ed43b1f"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -17,37 +27,50 @@ let trainName = "";
 let destination = "";
 let firstTime = "";
 let frequency = 0;
+let nextArrival = "";
+let minAway = 0;
+let currentTime = "";
 
-const newTrain = {
-    trainName: trainName,
-    destination: destination,
-    firstTime: firstTime,
-    frequency: frequency
-}
-
-$("#submit").on("click", function (event) {
+$("#submit").on("click", function(event) {
     event.preventDefault();
 
     trainName = $("#train-name").val().trim();
     destination = $("#destination").val().trim();
     firstTime = $("#first-time").val().trim();
     frequency = $("#frequency").val().trim();
+    // nextArrival = ;
+    // minAway = ;
 
-    database.ref().push(newTrain);
+    database.ref().push({
+        trainName: trainName,
+        destination: destination,
+        firstTime: firstTime,
+        frequency: frequency,
+        nextArrival: nextArrival,
+        minAway: minAway    
+    });
+    
+    $("#train-name").val("");
+    $("#destination").val("");
+    $("#first-time").val("");
+    $("#frequency").val("");
+
 });
 
-database.ref().on("child_added", function (childSnapshot) {
+database.ref().on("child_added", function(snapshot) {
 
-    // trainName = childSnapshot.val().trainName;
-    // destination = childSnapshot.val().destination;
-    // firstTime = childSnapshot.val().firstTime;
-    // frequency = childSnapshot.val().frequency;
+    trainName = snapshot.val().trainName;
+    destination = snapshot.val().destination;
+    frequency = snapshot.val().frequency;
+    nextArrival = snapshot.val().nextArrival;
+    minAway = snapshot.val().minAway;
 
     const tableRow = $("<tr>").append(
         $("<td>").text(trainName),
         $("<td>").text(destination),
-        $("<td>").text(firstTime),
-        $("<td>").text(frequency)
+        $("<td>").text(frequency),
+        $("<td>").text(nextArrival),
+        $("<td>").text(minAway)
     );
 
     $("#table-body").append(tableRow);
