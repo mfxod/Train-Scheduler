@@ -1,13 +1,15 @@
 
-// if (firstTime already occurred) {
-//     x = currentTime - firstTime;
+// if (firstArrival already occurred) {
+//     x = currentTime - firstArrival;
 //     remainder = x % frequency;
 //     minAway = frequency - remainder;
 //     nextArrival = currentTime + minAway;
 // } else {
-//     nextArrival = firstTime;
-//     minAway = firstTime - currentTime;
+//     nextArrival = firstArrival;
+//     minAway = firstArrival - currentTime;
 // }
+
+// ----- GLOBAL VARIABLES -----
 
 const firebaseConfig = {
     apiKey: "AIzaSyA5kKlwHTUsEAqxWdaR2hsrxQ3HxgBQ8ao",
@@ -23,28 +25,53 @@ firebase.initializeApp(firebaseConfig);
 
 const database = firebase.database();
 
+// for user input
 let trainName = "";
 let destination = "";
-let firstTime = "";
-let frequency = 0;
-let nextArrival = "";
-let minAway = 0;
+let firstArrival = "";
+let frequency = "";
+
+// for calculations
 let currentTime = "";
+let timeDiff = "";
+let remainder = "";
+let minAway = "";
+let nextArrival = "";
+
+
+
+// ----- FUNCTIONS -----
+
+function doMath() {
+    if (firstArrival < currentTime) {
+        timeDiff = currentTime - firstArrival;
+        remainder = timeDiff % frequency;
+        minAway = frequency - remainder;
+        nextArrival = currentTime + minAway;
+    } else {
+        nextArrival = firstArrival;
+        minAway = firstArrival - currentTime;
+    }
+};
+
+
+
+// ----- PROCESS -----
 
 $("#submit").on("click", function(event) {
     event.preventDefault();
 
     trainName = $("#train-name").val().trim();
     destination = $("#destination").val().trim();
-    firstTime = $("#first-time").val().trim();
+    firstArrival = $("#first-arrival").val().trim();
     frequency = $("#frequency").val().trim();
-    // nextArrival = ;
-    // minAway = ;
+
+    doMath();
 
     database.ref().push({
         trainName: trainName,
         destination: destination,
-        firstTime: firstTime,
+        firstArrival: firstArrival,
         frequency: frequency,
         nextArrival: nextArrival,
         minAway: minAway    
@@ -52,7 +79,7 @@ $("#submit").on("click", function(event) {
     
     $("#train-name").val("");
     $("#destination").val("");
-    $("#first-time").val("");
+    $("#first-arrival").val("");
     $("#frequency").val("");
 
 });
@@ -75,3 +102,9 @@ database.ref().on("child_added", function(snapshot) {
 
     $("#table-body").append(tableRow);
 });
+
+// may have to add this to update timers:
+// database.ref().on("value", function(snapshot) {
+//     nextArrival = snapshot.val().nextArrival;
+//     minAway = snapshot.val().minAway;
+// });
