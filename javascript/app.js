@@ -1,14 +1,4 @@
 
-// if (firstArrival already occurred) {
-//     x = currentTime - firstArrival;
-//     remainder = x % frequency;
-//     minAway = frequency - remainder;
-//     nextArrival = currentTime + minAway;
-// } else {
-//     nextArrival = firstArrival;
-//     minAway = firstArrival - currentTime;
-// }
-
 // ----- GLOBAL VARIABLES -----
 
 const firebaseConfig = {
@@ -28,29 +18,55 @@ const database = firebase.database();
 // for user input
 let trainName = "";
 let destination = "";
-let firstArrival = "";
-let frequency = "";
+let firstHrs = 0;
+let firstMins = 0;
+let firstArrival = false;
+let frequency = 0;
 
 // for calculations
-let currentTime = "";
-let timeDiff = "";
-let remainder = "";
-let minAway = "";
-let nextArrival = "";
+let currentTime = false;
+let timeDiff = 0;
+let remainder = 0;
+let minAway = 0;
+let nextArrival = false;
 
 
 
 // ----- FUNCTIONS -----
 
+function firstArrivalDate() {
+    firstArrival = new Date(
+        dateFns.getYear(new Date()),
+        dateFns.getMonth(new Date()),
+        dateFns.getDate(new Date()),
+        firstHrs,
+        firstMins);
+    console.log("First Arrival: " + firstArrival);
+};
+
+// function test() {
+//     if (firstArrival < currentTime) {
+//         console.log("true")
+//     } else {
+//         console.log("false");
+//     }
+// }
+
 function doMath() {
+    currentTime = new Date();
+
     if (firstArrival < currentTime) {
-        timeDiff = currentTime - firstArrival;
+        // timeDiff = currentTime - firstArrival;
+        timeDiff = dateFns.differenceInMinutes(currentTime, firstArrival);
+        console.log("timeDiff: " + timeDiff);
         remainder = timeDiff % frequency;
         minAway = frequency - remainder;
-        nextArrival = currentTime + minAway;
+        // nextArrival = currentTime + minAway;
+        nextArrival = dateFns.addMinutes(currentTime, minAway);
     } else {
+        // minAway = firstArrival - currentTime;
+        minAway = dateFns.differenceInMinutes(firstArrival, currentTime);
         nextArrival = firstArrival;
-        minAway = firstArrival - currentTime;
     }
 };
 
@@ -63,25 +79,29 @@ $("#submit").on("click", function(event) {
 
     trainName = $("#train-name").val().trim();
     destination = $("#destination").val().trim();
-    firstArrival = $("#first-arrival").val().trim();
+    firstHrs = $("#first-hrs").val().trim();
+    firstMins = $("#first-mins").val().trim();
     frequency = $("#frequency").val().trim();
 
+    firstArrivalDate();
     doMath();
 
+    // why isn't nextArrival going to Firebase??
     database.ref().push({
         trainName: trainName,
         destination: destination,
-        firstArrival: firstArrival,
+        firstHrs: firstHrs,
+        firstMins: firstMins,
         frequency: frequency,
         nextArrival: nextArrival,
-        minAway: minAway    
+        minAway: minAway
     });
     
     $("#train-name").val("");
     $("#destination").val("");
-    $("#first-arrival").val("");
+    $("#first-hrs").val("");
+    $("#first-mins").val("");
     $("#frequency").val("");
-
 });
 
 database.ref().on("child_added", function(snapshot) {
