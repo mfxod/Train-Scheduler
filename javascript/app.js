@@ -34,6 +34,7 @@ let nextArrival = false;
 
 // ----- FUNCTIONS -----
 
+// sets firstArrival as a date object
 function firstArrivalDate() {
     firstArrival = new Date(
         dateFns.getYear(new Date()),
@@ -41,32 +42,20 @@ function firstArrivalDate() {
         dateFns.getDate(new Date()),
         firstHrs,
         firstMins);
-    console.log("First Arrival: " + firstArrival);
 };
 
-// function test() {
-//     if (firstArrival < currentTime) {
-//         console.log("true")
-//     } else {
-//         console.log("false");
-//     }
-// }
-
+// calculates nextArrival time and minAway
 function doMath() {
     currentTime = new Date();
 
     if (firstArrival < currentTime) {
-        // timeDiff = currentTime - firstArrival;
         timeDiff = dateFns.differenceInMinutes(currentTime, firstArrival);
-        console.log("timeDiff: " + timeDiff);
         remainder = timeDiff % frequency;
         minAway = frequency - remainder;
-        // nextArrival = currentTime + minAway;
-        nextArrival = dateFns.addMinutes(currentTime, minAway);
+        nextArrival = dateFns.format(new Date(dateFns.addMinutes(currentTime, minAway)), "h:mm A");
     } else {
-        // minAway = firstArrival - currentTime;
         minAway = dateFns.differenceInMinutes(firstArrival, currentTime);
-        nextArrival = firstArrival;
+        nextArrival = dateFns.format(new Date(firstArrival), "h:mm A");
     }
 };
 
@@ -84,9 +73,9 @@ $("#submit").on("click", function(event) {
     frequency = $("#frequency").val().trim();
 
     firstArrivalDate();
+
     doMath();
 
-    // why isn't nextArrival going to Firebase??
     database.ref().push({
         trainName: trainName,
         destination: destination,
@@ -116,15 +105,24 @@ database.ref().on("child_added", function(snapshot) {
         $("<td>").text(trainName),
         $("<td>").text(destination),
         $("<td>").text(frequency),
-        $("<td>").text(nextArrival),
-        $("<td>").text(minAway)
+        $("<td>").attr("class", "next-arrival").text(nextArrival),
+        $("<td>").attr("class", "min-away").text(minAway)
     );
 
-    $("#table-body").append(tableRow);
+    $("#table-body").append(tableRow);  
+
+},  function(errorObject) {
+        console.log("Error: " + errorObject.code);  
 });
 
-// may have to add this to update timers:
+// First Bonus Challenge Pseudocoding
+// to update nextArrival and minAway in real time:
+// 1) make a "timer" that recognizes when a minute has elapsed
+// 2) update Firebase with new Date() from the "timer" using database.ref().push()
+// 3) replace NextArrival and minAway values in HTML with most current ones:
 // database.ref().on("value", function(snapshot) {
-//     nextArrival = snapshot.val().nextArrival;
-//     minAway = snapshot.val().minAway;
+//     $("next-arrival").text(snapshot.val().nextArrival);
+//     $("min-away").text(snapshot.val().minAway);
+// },  function(errorObject) {
+//     console.log("Error: " + errorObject.code);  
 // });
