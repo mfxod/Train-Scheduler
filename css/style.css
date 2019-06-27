@@ -1,0 +1,22 @@
+* {
+    font-family: 'Fira Mono', monospace;
+    color: #49E20E;
+}
+
+h1 {
+    font-family: 'Press Start 2P', cursive;
+    letter-spacing: 1.125rem;
+    color: #49E20E;
+}
+
+body {
+    background: #000000;
+}
+
+.jumbotron {
+    background: #2d2d2d;
+}
+
+.card-body {
+    background: #2d2d2d;
+}
