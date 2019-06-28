@@ -17,6 +17,22 @@ body {
     background: #2d2d2d;
 }
 
+.card {
+    background-color: #2d2d2d;
+}
+
+.card-header {
+    background-color: rgba(0,0,0,.07);
+}
+
 .card-body {
     background: #2d2d2d;
+}
+
+.form-control {
+    background-color: #2d2d2d;
+}
+
+.btn-dark {
+    color: #49E20E;
 }
